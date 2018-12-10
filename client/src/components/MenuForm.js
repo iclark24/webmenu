@@ -4,14 +4,24 @@ import { Form, } from "semantic-ui-react";
 class MenuForm extends React.Component {
   state = { name: '' };
 
+  componentDidMount() {
+    if (this.props.id)
+      this.setState({ name: this.props.name });
+  }
+
   handleChange = (e) => {
     this.setState({ name: e.target.value });
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.addMenu(this.state.name);
-    this.setState({ name: '' })
+    if (this.props.id) {
+      this.props.updateMenu({id: this.props.id}, {...this.state});
+      this.props.toggleEdit()
+    } else {
+      this.props.addMenu(this.state.name);
+    }
+    this.setState({ name: ""})
   }
 
   render() {
@@ -24,6 +34,8 @@ class MenuForm extends React.Component {
           value={this.state.name}
           onChange={this.handleChange}
         />
+        <Form.Button color="green">Submit</Form.Button>
+
       </Form>
     )
   }

@@ -4,13 +4,24 @@ import { Form, } from "semantic-ui-react";
 class ItemForm extends React.Component {
   state = { name: "" , cost: "", description: ""};
 
+
+  componentDidMount() {
+    if (this.props.id)
+      this.setState({ name: this.props.name, cost: this.props.cost, description: this.props.description });
+  }
+
   handleChange = (e) => {
     this.setState({[e.target.name]: e.target.value });
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.addItem(this.state.name, this.state.cost, this.state.description);
+    if (this.props.id) {
+      this.props.updateItem({id: this.props.id}, {...this.state});
+      this.props.toggleEdit()
+    } else {
+      this.props.addItem(this.state.name, this.state.cost, this.state.description);
+    }
     this.setState({ name: "" , cost: "", description: "" })
   }
 

@@ -16,7 +16,7 @@ class Api::ItemsController < ApplicationController
   end
 
   def update
-    # @item.update(complete: !item.complete)
+    @item.update(item_params)
     render json: @item
   end
 

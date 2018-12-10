@@ -5,7 +5,7 @@ import {Segment} from "semantic-ui-react"
 const Menus = ({ menus, updateMenu, deleteMenu }) => (
   <div>
     { menus.map( menus => 
-      <Segment raised>
+      <Segment raised color="red">
         <Menu
           key={menus.id}
           {...menus}

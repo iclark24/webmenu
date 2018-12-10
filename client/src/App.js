@@ -7,7 +7,7 @@ import axios from "axios"
 class App extends Component {
   state = { 
     menus: [],
-    showForm: true,
+    showForm: false,
   }
 
   toggleForm = () =>this.setState({ showForm: !this.state.showForm })
@@ -30,8 +30,8 @@ class App extends Component {
       })
   }
 
-  updateMenu = (id) => {
-    axios.put(`/api/menus/${id}`)
+  updateMenu = (id, menu) => {
+    axios.put(`/api/menus/${id.id}`, menu)
     .then( res => {
       const menus = this.state.menus.map( m => {
         if (m.id === id)
@@ -56,7 +56,7 @@ class App extends Component {
       <Container style={{ padding: "30px 0" }}>
         <Button icon color="blue" onClick={this.toggleForm}>
           <Icon name={this.state.showForm ? 'times' : 'plus'} />
-        </Button>
+        </Button>New Menu
         { showForm ? <MenuForm addMenu={this.addMenu} /> : null }
           <Menus
             menus={this.state.menus}

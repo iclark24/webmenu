@@ -15,7 +15,7 @@ class Api::MenusController < ApplicationController
   end
 
   def update
-    # @menu.update(complete: !menu.complete)
+    @menu.update(menu_params)
     render json: @menu
   end
 
@@ -31,7 +31,7 @@ class Api::MenusController < ApplicationController
   end
 
   def menu_params
-    params.require(:menu).permit(:name, :cost, :description, :menu_id)
+    params.require(:menu).permit(:name)
   end
 
 end

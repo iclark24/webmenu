@@ -1,18 +1,23 @@
 import React, {Component} from 'react';
-import {Header, Button, Icon} from "semantic-ui-react"
+import {Header, Button, Icon, Segment} from "semantic-ui-react"
 import axios from "axios"
 import Items from "./Items"
 import ItemForm from "./ItemForm"
+import MenuForm from "./MenuForm"
 // ({ id, complete, name, updateMenu, deleteMenu })
 
 class Menu extends Component {
 
   state = { 
     items: [], 
-    showForm: true,
+    showForm: false,
+    editing: false,
   }
 
   toggleForm = () =>this.setState({ showForm: !this.state.showForm })
+
+  toggleEdit = () => this.setState({ editing: !this.state.editing, });
+
 
   componentDidMount() {
     axios.get(`/api/menus/${this.props.id}/items`)
@@ -32,8 +37,8 @@ class Menu extends Component {
       })
   }
 
-  updateItem = (id) => {
-    axios.put(`/api/menus/${this.props.id}/items/${id}`)
+  updateItem = (id, item) => {
+    axios.put(`/api/menus/${this.props.id}/items/${id.id}`, item)
     .then( res => {
       const items = this.state.items.map( m => {
         if (m.id === id)
@@ -56,10 +61,17 @@ class Menu extends Component {
     const {showForm} = this.state;
     return (
     <div>
-      <Header as="h2" style={{ marginLeft: "15px" }}>{ this.props.name }</Header>
-      <Button icon color="blue" onClick={this.toggleForm}>
-        <Icon name={this.state.showForm ? 'times' : 'plus'} />
-      </Button>
+
+      <Segment basic style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Button icon color="blue" onClick={this.toggleEdit}>
+          <Icon name="pencil" />
+        </Button>
+        {this.state.editing ?
+          <MenuForm { ...this.props } toggleEdit={this.toggleEdit}></MenuForm>
+            :
+          <Header as="h2" style={{ marginLeft: "15px" }}>{ this.props.name }</Header>
+        }
+
       <Button 
         icon 
         color="red" 
@@ -69,7 +81,13 @@ class Menu extends Component {
       >
         <Icon name="trash" />
       </Button>
-        { showForm ? <ItemForm addItem={this.addItem} /> : null }
+      </Segment>
+      <Segment basic>
+      <Button icon color="blue" onClick={this.toggleForm}>
+        <Icon name={this.state.showForm ? 'times' : 'plus'} />
+      </Button> New Item
+      { showForm ? <ItemForm addItem={this.addItem} /> : null }
+      </Segment>
       <Items
         items={this.state.items}
         updateItem={this.updateItem}
